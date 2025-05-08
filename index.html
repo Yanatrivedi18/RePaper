@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repaper | EcoCredits Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { margin: 0; padding: 0; background: #f9fafb; color: #111; scroll-behavior: smooth; }
+    header { background: #14532d; color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+    header nav { display: flex; align-items: center; }
+    header nav a { color: white; text-decoration: none; margin-left: 25px; font-weight: 600; transition: color 0.3s; }
+    header nav a:hover { color: #a7f3d0; }
+    #logout-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin-left: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    #logout-btn:hover {
+      background: #b91c1c;
+      transform: scale(1.05);
+    }
+    #logout-btn:disabled {
+      background: #a5d6a7;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .hero {
+      background-image: url("landing.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 0;
+    }
+    .hero h2 {
+      font-size: 52px;
+      max-width: 800px;
+      background: rgba(20, 83, 45, 0.8);
+      padding: 30px;
+      border-radius: 16px;
+      position: relative;
+      font-weight: 700;
+      animation: fadeIn 1s ease-in;
+      z-index: 1;
+    }
+    .card-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .info-card {
+      background: #f4f4f4;
+      border-radius: 12px;
+      padding: 20px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+    .info-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      background: #e8f5e9;
+    }
+    .info-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #2e7d32;
+    }
+    .info-card p {
+      font-size: 0.95rem;
+      color: #444;
+    }
+    .section { padding: 80px 40px; max-width: 1200px; margin: auto; }
+    .section h2 { font-size: 36px; color: #14532d; margin-bottom: 25px; font-weight: 700; text-align: center; }
+    .section p { font-size: 18px; color: #333; line-height: 1.6; }
+    .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 6px 16px rgba(0,0,0,0.1); margin: 40px auto; max-width: 700px; }
+    .credits-box { background: #dcfce7; padding: 25px; border-radius: 12px; font-size: 22px; margin: 20px 0; text-align: center; font-weight: 600; }
+    input, button { padding: 12px; margin: 10px 0; width: 100%; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+    input:focus { outline: none; border-color: #22c55e; }
+    #auth-section {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    #auth-section button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 6px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width: 120px;
+    }
+    #auth-section button:hover {
+      background-color: #388e3c;
+      transform: scale(1.05);
+    }
+    #auth-section button:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
+    .shop-item { background: #fffbeb; border: 2px solid #fde68a; border-radius: 16px; padding: 20px; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+    .shop-item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .shop-item img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
+    .shop-item h3 { margin: 10px 0 5px; font-size: 20px; font-weight: 600; color: #14532d; }
+    .shop-item p { margin: 5px 0; font-size: 16px; color: #555; }
+    .shop-item .paper-info { font-size: 14px; color: #777; margin-top: 10px; }
+    .illustration { text-align: center; margin: 40px 0; }
+    .illustration img { max-width: 100%; height: auto; border-radius: 12px; }
+    footer { background: #14532d; color: white; padding: 50px 20px; text-align: center; margin-top: 80px; }
+    footer p { margin: 0; font-size: 16px; }
+    .error { color: #dc2626; font-size: 14px; margin-top: 5px; display: none; }
+    .impact-box { background: #e8f5e9; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: center; }
+    .impact-box p { margin: 5px 0; font-size: 18px; color: #2e7d32; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 36px; }
+      .section { padding: 40px 20px; }
+      .shop-grid { grid-template-columns: 1fr; }
+      header nav a { margin-left: 15px; }
+      #logout-btn { margin-left: 15px; }
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDijnGzk6ULd55VUhtme4nPEmW2nQGlREE",
+      authDomain: "repaper-18551.firebaseapp.com",
+      projectId: "repaper-18551",
+      storageBucket: "repaper-18551.firebasestorage.app",
+      messagingSenderId: "723079795023",
+      appId: "1:723079795023:web:76984162620126d081b53a",
+      measurementId: "G-QLX3KCHLXE"
+    };
+
+    // Initialize Firebase
+    let app, auth, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Error initializing Firebase:", error);
+      alert("Failed to connect to Firebase. Please check your network and try again.");
+    }
+
+    // Input validation and button state management
+    function validateInputs() {
+      const email = document.getElementById('email')?.value;
+      const password = document.getElementById('password')?.value;
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+      const loginButton = document.querySelector('button[onclick="login()"]');
+      const signupButton = document.querySelector('button[onclick="signup()"]');
+
+      let isValid = true;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.style.display = 'block';
+        isValid = false;
+      } else {
+        emailError.style.display = 'none';
+      }
+
+      if (!password || password.length < 6) {
+        passwordError.style.display = 'block';
+        isValid = false;
+      } else {
+        passwordError.style.display = 'none';
+      }
+
+      loginButton.disabled = !isValid;
+      signupButton.disabled = !isValid;
+    }
+
+    // Attach input listeners only if elements exist
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    if (emailInput && passwordInput) {
+      emailInput.addEventListener('input', validateInputs);
+      passwordInput.addEventListener('input', validateInputs);
+    }
+
+    // Check auth state to auto-redirect to dashboard if already logged in
+    if (auth) {
+      onAuthStateChanged(auth, (user) => {
+        const logoutBtn = document.getElementById('logout-btn');
+        if (user) {
+          console.log("User logged in:", user.uid);
+          document.getElementById('auth-section').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('user-email').textContent = user.email;
+          logoutBtn.style.display = 'inline-block';
+          loadCredits(user.uid);
+        } else {
+          console.log("No user logged in");
+          document.getElementById('auth-section').style.display = 'block';
+          document.getElementById('dashboard').style.display = 'none';
+          logoutBtn.style.display = 'none';
+        }
+      });
+    }
+
+    window.login = function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!auth) {
+        alert("Firebase not initialized. Please refresh the page.");
+        return;
+      }
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          console.log("Login successful, UID:", user.uid);
+          document.getElementById('auth-section').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('user-email').textContent = email;
+          document.getElementById('logout-btn').style.display = 'inline-block';
+          loadCredits(user.uid);
+        })
+        .catch(error => {
+          console.error("Login error:", error);
+          if (error.code === 'auth/invalid-login-credentials') {
+            alert('Invalid login. Please check your email or password.');
+          } else {
+            alert(`Login error: ${error.message}`);
+          }
+        });
+    };
+
+    window.signup = function signup() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!auth || !db) {
+        alert("Firebase not initialized. Please refresh the page.");
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          const uid = user.uid;
+          console.log("Signup successful, UID:", uid);
+          // Save to Firestore
+          await setDoc(doc(db, 'users', uid), { credits: 0, email: email });
+          console.log("User document created in Firestore");
+          // Auto-login
+          await signInWithEmailAndPassword(auth, email, password);
+          alert(`Signup successful! User ID: ${uid}`);
+          document.getElementById('auth-section').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('user-email').textContent = email;
+          document.getElementById('logout-btn').style.display = 'inline-block';
+          loadCredits(uid);
+        })
+        .catch(error => {
+          console.error("Signup error:", error);
+          if (error.code === 'auth/email-already-in-use') {
+            alert('This email is already registered. Please log in instead.');
+          } else if (error.code === 'permission-denied') {
+            alert('Permission denied. Please check Firestore rules.');
+          } else {
+            alert(`Signup error: ${error.message}`);
+          }
+        });
+    };
+
+    window.logout = function logout() {
+      if (!auth) {
+        alert("Firebase not initialized. Please refresh the page.");
+        return;
+      }
+
+      signOut(auth)
+        .then(() => {
+          console.log("User logged out");
+          document.getElementById('auth-section').style.display = 'block';
+          document.getElementById('dashboard').style.display = 'none';
+          document.getElementById('user-email').textContent = '';
+          document.getElementById('user-credits').textContent = '0';
+          document.getElementById('co2-saved').textContent = '0';
+          document.getElementById('trees-saved').textContent = '0';
+          document.getElementById('logout-btn').style.display = 'none';
+        })
+        .catch(error => {
+          console.error("Logout error:", error);
+          alert(`Logout error: ${error.message}`);
+        });
+    };
+
+    async function loadCredits(uid) {
+      if (!db) {
+        console.error("Firestore not initialized");
+        alert("Failed to connect to database. Please refresh the page.");
+        return;
+      }
+
+      try {
+        console.log("Fetching credits for UID:", uid);
+        const userRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(userRef);
+
+        // Initial fetch of credits
+        if (docSnap.exists()) {
+          const credits = docSnap.data().credits || 0;
+          console.log("Credits fetched:", credits);
+          document.getElementById('user-credits').textContent = credits;
+        } else {
+          console.log("User document does not exist, creating new document");
+          await setDoc(userRef, { credits: 0, email: auth.currentUser.email });
+          document.getElementById('user-credits').textContent = 0;
+        }
+
+        // Real-time listener for credits
+        onSnapshot(doc(db, 'users', uid), (doc) => {
+          if (doc.exists()) {
+            const credits = doc.data().credits || 0;
+            console.log("Real-time credits update:", credits);
+            document.getElementById('user-credits').textContent = credits;
+          } else {
+            console.warn("User document deleted or not found");
+            document.getElementById('user-credits').textContent = 0;
+          }
+        }, (error) => {
+          console.error("Credits listener error:", error);
+          if (error.code === 'permission-denied') {
+            alert("Permission denied. Please check Firestore rules.");
+          } else if (error.message.includes('SERVICE_DISABLED')) {
+            alert("Firestore API is disabled. Enable it at: https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=repaper-18551");
+          } else {
+            alert(`Error in credits listener: ${error.message}`);
+          }
+        });
+
+        // Load environmental impact
+        const logsQuery = query(collection(db, 'paper_logs'), where('userId', '==', uid));
+        onSnapshot(logsQuery, (snapshot) => {
+          let totalWeight = 0;
+          snapshot.forEach(doc => {
+            totalWeight += doc.data().weight || 0;
+          });
+          console.log("Total weight from paper_logs:", totalWeight);
+          document.getElementById('co2-saved').textContent = (totalWeight * 1.2).toFixed(2);
+          document.getElementById('trees-saved').textContent = (totalWeight * 0.024).toFixed(2);
+        }, (error) => {
+          console.error("Paper logs listener error:", error);
+          document.getElementById('co2-saved').textContent = '0';
+          document.getElementById('trees-saved').textContent = '0';
+          if (error.code === 'permission-denied') {
+            alert("Permission denied. Please check Firestore rules.");
+          } else {
+            alert(`Error in paper logs listener: ${error.message}`);
+          }
+        });
+      } catch (error) {
+        console.error("Error loading credits:", error);
+        if (error.code === 'permission-denied') {
+          alert("Permission denied. Please check Firestore rules.");
+        } else if (error.message.includes('SERVICE_DISABLED')) {
+          alert("Firestore API is disabled. Enable it at: https://console.developers.google.com/apis/api/firestore.googleapis.com/overview?project=repaper-18551");
+        } else {
+          alert(`Failed to load credits: ${error.message}`);
+        }
+      }
+    }
+
+    window.redeem = async function redeem(item, cost) {
+      if (!auth || !db) {
+        alert("Firebase not initialized. Please refresh the page.");
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        alert('Please log in to redeem items.');
+        return;
+      }
+
+      try {
+        console.log(`Attempting to redeem ${item} for ${cost} credits`);
+        const userRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(userRef);
+
+        let currentCredits = docSnap.data()?.credits || 0;
+
+        if (currentCredits >= cost) {
+          await updateDoc(userRef, { credits: increment(-cost) });
+          console.log(`Redeemed ${item}, deducted ${cost} credits`);
+          alert(`You bought a ${item}!`);
+        } else {
+          alert('Not enough credits!');
+        }
+      } catch (error) {
+        console.error("Error redeeming item:", error);
+        if (error.code === 'permission-denied') {
+          alert("Permission denied. Please check Firestore rules.");
+        } else {
+          alert(`Failed to redeem item: ${error.message}`);
+        }
+      }
+    };
+
+    // Attach logout event listener
+    document.getElementById('logout-btn').addEventListener('click', logout);
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Repaper</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#platform">Platform</a>
+      <a href="#shop">Shop</a>
+      <button id="logout-btn" style="display: none;">Logout</button>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h2>Transform Paper Waste into Sustainable Rewards with Repaper</h2>
+  </div>
+
+  <section class="section" id="about">
+    <h2>About Us</h2>
+    <p>
+      Repaper is an initiative at MIT ADT to tackle the growing problem of paper waste through a tech-enabled reward system.
+      We empower students to recycle by offering credits for every gram of waste paper submitted. These credits can be used to
+      redeem sustainable products made from the recycled material.
+    </p>
+    <div class="card-container">
+      <div class="info-card">
+        <h3>Seamless IoT Integration for Smart Recycling</h3>
+        <p>Connect effortlessly with our IoT-enabled smart bins using QR code scanning. Drop your paper waste, and our system instantly logs the weight, rewarding you with credits in real-time. Recycling has never been this smart or convenient!</p>
+      </div>
+      <div class="info-card">
+        <h3>Gamified Experience</h3>
+        <p>Earn points, unlock badges like "Eco Warrior," and climb the leaderboard with every recycle. Our fun challenges make recycling addictive, motivating you and your community to save the planet while competing with friends!</p>
+      </div>
+      <div class="info-card">
+        <h3>Real-Time Environmental Impact Tracking</h3>
+        <p>See your impact instantly! For every kilogram of paper recycled, track how much CO2 and trees you’ve saved. Our app empowers you with clear, real-time stats to understand and amplify your contribution to a greener future.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container" id="auth-section">
+    <h2>Login or Sign Up</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <div class="error" id="email-error">Please enter a valid email address.</div>
+    <input type="password" id="password" placeholder="Password" />
+    <div class="error" id="password-error">Password must be at least 6 characters.</div>
+    <button onclick="login()" disabled>Login</button>
+    <button onclick="signup()" disabled>Sign Up</button>
+  </div>
+
+  <div class="container" id="dashboard" style="display: none;">
+    <h2>Welcome, <span id="user-email"></span></h2>
+    <div class="credits-box">
+      You have <strong><span id="user-credits">0</span> EcoCredits</strong>
+    </div>
+    <div class="impact-box">
+      <h3>Your Environmental Impact</h3>
+      <p>CO2 Saved: <span id="co2-saved">0</span> kg</p>
+      <p>Trees Saved: <span id="trees-saved">0</span></p>
+    </div>
+    <section class="section" id="shop">
+      <h2>Shop with Credits</h2>
+      <p>Redeem your EcoCredits for sustainable products made from recycled paper. Each product is crafted with care to reduce waste and promote eco-friendly living.</p>
+      <div class="shop-grid">
+        <div class="shop-item">
+          <img src="noteb.jpg" alt="Recycled Notebook">
+          <h3>Recycled Notebook</h3>
+          <p>10 credits</p>
+          <p class="paper-info">Made from ~100 pages of recycled paper</p>
+          <button onclick="redeem('notebook', 10)">Add to cart</button>
+        </div>
+        <div class="shop-item">
+          <img src="pen.webp" alt="Eco Pen">
+          <h3>Eco Pen</h3>
+          <p>5 credits</p>
+          <p class="paper-info">Made from ~20 pages of recycled paper</p>
+          <button onclick="redeem('pen', 5)">Add to cart</button>
+        </div>
+        <div class="shop-item">
+          <img src="jou.webp" alt="Recycled Journal">
+          <h3>Recycled Journal</h3>
+          <p>15 credits</p>
+          <p class="paper-info">Made from ~150 pages of recycled paper</p>
+          <button onclick="redeem('journal', 15)">Add to cart</button>
+        </div>
+        <div class="shop-item">
+          <img src="tote.webp" alt="Eco Tote Bag">
+          <h3>Eco Tote Bag</h3>
+          <p>20 credits</p>
+          <p class="paper-info">Made from ~200 pages of recycled paper</p>
+          <button onclick="redeem('tote bag', 20)">Add to cart</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 Repaper, MIT ADT. All rights reserved.</p>
+  </footer>
+</body>
+</html>
